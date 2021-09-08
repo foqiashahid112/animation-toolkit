@@ -10,7 +10,7 @@ class Sphere3D : public atkui::Framework {
 
   virtual void setup(){
     currentPos = vec3(0,0,0);
-    vel = vec3(0,0,0); //100.0f * agl::randomUnitVector();
+    vel = vec3(0,0,0);
     spacePressed = false;
   }
 
