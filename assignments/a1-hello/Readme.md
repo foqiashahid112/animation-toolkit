@@ -1,21 +1,25 @@
 # Readme
 Assignment # 1
+
 Due: 17th September, 2021
 
 # Eyes!
 *Question 1*
+
 Draw a pair of eyes
 
 <img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a1-hello/Look.gif' title='Eyes' width='' alt='Eyes' />
 
 # Look!
 *Question 2*
+
 Animate eyes to follow target
 
 <img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a1-hello/Eyes.gif' title='Look' width='' alt='Look' />
 
 # Many Particles!
 *Question 3*
+
 Create 100+ particles, randomly distributed across the screen
 
 Particles should all move in the same direction, but at different speeds
