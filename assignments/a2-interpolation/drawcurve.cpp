@@ -75,12 +75,8 @@ class DrawCubic : public atkui::Framework
     float time = 0.00;
     while( time < 1.00){
       vec3 f = Casteljau(controlPoints, time);
-      cout << "t: " << time <<endl;
-      std::cout << "f" <<f <<std::endl;
       time+= 0.01;
       vec3 s = Casteljau(controlPoints, time);
-      cout << "t: " << time <<endl;
-      std::cout << "s" <<s <<std::endl;
       if(time > 1.00){s = f;}
       drawLine(f,s);
     }
@@ -93,7 +89,7 @@ class DrawCubic : public atkui::Framework
   vec3 Casteljau(vector<vec3> CPS, float T){
     //Level 1
     vec3 b10 = LERP(CPS.at(0), CPS.at(1), T);
-    vec3 b11 LERP(CPS.at(1), CPS.at(2), T);
+    vec3 b11 = LERP(CPS.at(1), CPS.at(2), T);
     vec3 b12 = LERP(CPS.at(2), CPS.at(3), T);
 
     //Level 2
@@ -101,10 +97,14 @@ class DrawCubic : public atkui::Framework
     vec3 b21 = LERP(b11,b12, T);
 
     //Level 3
-    vec2 final = LERP(b20,b21, T);
+    vec3 final = LERP(b20,b21, T);
     return final;
   }
 
+  /* 
+  * @brief : Helper Function calculates linear interpotation between
+  * any two given points
+  */
   vec3 LERP(vec3 init, vec3 final, float time_){
     return vec3((1-time_) * init + time_ * final);
   }
