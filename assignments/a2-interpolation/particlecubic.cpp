@@ -1,15 +1,17 @@
+/* Question 2
+* Implement an application that draws a cubic curve and its control points
+* using both Bernstein polynomials and De Casteljau’s algorithm.
+*/
+
 #include "atkui/framework.h"
+#include <math.h>  /* fmod */
 using namespace glm;
-#include <math.h>       /* fmod */
 
 class ParticleCubic : public atkui::Framework {
  public:
   ParticleCubic() : atkui::Framework(atkui::Orthographic,  400, 400) {
   }
-
-  void setup() {
-  }
-
+  
   void scene() {
     drawBernstein();
     drawBall();

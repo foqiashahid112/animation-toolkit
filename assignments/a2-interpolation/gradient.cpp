@@ -1,7 +1,6 @@
 /* Question 1
 * Use linear interpolation to gradually change from one color to another
-* based on position.
-* 
+* based on position. 
 */
 #include <iostream>
 #include "atkui/framework.h"
@@ -18,12 +17,11 @@ class Gradient : public atkui::Framework {
     C_se = vec3(1,0,1);
     t_y = 0;
     t_x = 0;
-    n = 10;
+    n = 10.0;
     nn = (1.0/10.0);
   }
 
   virtual void scene() {
-    //std::cout << "nn: "<< nn << std::endl;
     py = 0.5 * nn * height();
     for(int i = 0; i < n; i++){
       t_y = float(py) / float(height());
@@ -38,19 +36,18 @@ class Gradient : public atkui::Framework {
         px += nn *width();
       }
       py += nn * height();
-      //std::cout << t_y << std::endl;
     }
   }
   float nn;
-  int n;
+  float n;
   float t_x;
   float t_y;
   vec3 C_nw;
   vec3 C_ne;
   vec3 C_sw;
   vec3 C_se;
-  float px;
-  float py;
+  float px; //position x
+  float py; //position y
 };
 
 int main(int argc, char **argv) {

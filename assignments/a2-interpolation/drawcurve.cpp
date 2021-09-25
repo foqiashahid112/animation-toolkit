@@ -1,3 +1,8 @@
+/* Question 2
+* Implement an application that draws a cubic curve and its control points
+* using both Bernstein polynomials and De Casteljau’s algorithm.
+*/
+
 #include <iostream>
 #include "atkui/framework.h"
 #include <math.h>  
@@ -8,85 +13,105 @@ class DrawCubic : public atkui::Framework
  public:
   DrawCubic() : atkui::Framework(atkui::Orthographic, 400, 400) {
   }
+  virtual void setup(){
+    controlPoints.push_back(vec3(100,  50, 0));
+    controlPoints.push_back(vec3(150, 200, 0));
+    controlPoints.push_back(vec3(250, 100, 0));
+    controlPoints.push_back(vec3(300, 300, 0));
+  }
+
   virtual void scene(){
+    //Draw Control Points
     setColor(vec3(0,0,1));
-    drawSphere(B0, 10);
-    drawSphere(B3, 10);
+    drawSphere(controlPoints[0], 10);
+    drawSphere(controlPoints[3], 10);
 
     setColor(vec3(1,1,0));
-    drawSphere(B1, 10);
-    drawSphere(B2, 10);
+    drawSphere(controlPoints[1], 10);
+    drawSphere(controlPoints[2], 10);
 
+    setColor(vec3(0,0,1));
     if(mode == 0){
       drawBernstein();
     }
     else if(mode == 1){
-      drawCasteljau();
+       drawCasteljau();
     }
     else{
       return;
     }
   }
 
+  /* 
+  * @brief : Function draws Bernstein using helper function Bezier
+  */
   void drawBernstein(){
-    float bern_1 = 1;
-    float bern_2 = 0;
-    float bern_3 = 0;
-    float bern_4 = 0;
     float t = 0.00;
     while( t < 1.00){
-      vec3 p1 = bern_1 * B0 + bern_2 * B1 + bern_3 * B2 + bern_4 * B3;
+      vec3 p1 = Bezier(controlPoints, t);
       t+= 0.01;
-      bern_1 = pow((1-t),3.0);
-      bern_2 = 3*t*pow((1-t), 2.0);
-      bern_3 = 3 * pow(t,2.0) * (1-t);
-      bern_4 = pow(t, 3.0);
-      vec3 p2;
-      if(t == 1.00){
-        p2 = p1;
-      }
-      p2 = bern_1* B0 + bern_2 * B1 + bern_3 * B2 + bern_4* B3;
+      vec3 p2 = Bezier(controlPoints, t);
+      if(t > 1.00){ p2 = p1; }
       drawLine(p1,p2);
       }
   }
+  /* 
+  * @brief : Helper Function calculates Bezier Basis
+  * for cubic curve at time t for given control points
+  */
+  vec3 Bezier(vector<vec3> ctrlpts, float t){
+    float t2 = t * t;
+    float t3 = t2 * t;
+    float mt = 1 - t;
+    float mt2 = mt * mt;
+    float mt3 = mt2 * mt;
+    return ctrlpts[0] * mt3 + 3.0f * ctrlpts[1]*mt2*t + 3.0f *ctrlpts[2] * mt*t2 + ctrlpts[3]*t3;
+  }
 
-  void drawCasteljau() {
-    float t = 0.01;
-    while(t < 1.00){
-      //Level 1
-      vec3 b_0_1 = LERP(B0, B1, t);
-      vec3 b_1_1 = LERP(B1, B2, t);
-      vec3 b_2_1 = LERP(B2, B3, t);
-
-      //Level 2
-      vec3 b_0_2 = LERP(b_0_1, b_1_1, t);
-      vec3 b_1_2 = LERP(b_1_1, b_2_1, t);
-
-      //Level 3
-      vec3 b_0_3 = LERP(b_0_2, b_1_2, t);
-      vec3 p1 = b_0_3;
-
-      t+= 0.01;
-      vec3 b_0_1_ = LERP(B0, B1, t);
-      vec3 b_1_1_ = LERP(B1, B2, t);
-      vec3 b_2_1_ = LERP(B2, B3, t);
-
-      //Level 2
-      vec3 b_0_2_ = LERP(b_0_1_, b_1_1_, t);
-      vec3 b_1_2_ = LERP(b_1_1, b_2_1_, t);
-
-      //Level 3
-      vec3 b_0_3_ = LERP(b_0_2_, b_1_2_, t);
-      vec3 p2 = b_0_3_; 
-      drawLine(p1,p2);
+  /* 
+  * @brief : Draws cubic curve using helper function Casteljaus
+  */ 
+  void drawCasteljau(){
+    float time = 0.00;
+    while( time < 1.00){
+      vec3 f = Casteljau(controlPoints, time);
+      cout << "t: " << time <<endl;
+      std::cout << "f" <<f <<std::endl;
+      time+= 0.01;
+      vec3 s = Casteljau(controlPoints, time);
+      cout << "t: " << time <<endl;
+      std::cout << "s" <<s <<std::endl;
+      if(time > 1.00){s = f;}
+      drawLine(f,s);
     }
   }
 
-  vec3 LERP(vec3 b0, vec3 b1, float t){
-    vec3 lerp = (1-t) * b0 + t * b1;
-    return lerp;
+  /* 
+  * @brief : Helper Function uses de Casteljaus algorithm
+  * for cubic curves
+  */
+  vec3 Casteljau(vector<vec3> CPS, float T){
+    //Level 1
+    vec3 b10 = LERP(CPS.at(0), CPS.at(1), T);
+    vec3 b11 LERP(CPS.at(1), CPS.at(2), T);
+    vec3 b12 = LERP(CPS.at(2), CPS.at(3), T);
+
+    //Level 2
+    vec3 b20 = LERP(b10,b11, T);
+    vec3 b21 = LERP(b11,b12, T);
+
+    //Level 3
+    vec2 final = LERP(b20,b21, T);
+    return final;
   }
 
+  vec3 LERP(vec3 init, vec3 final, float time_){
+    return vec3((1-time_) * init + time_ * final);
+  }
+
+  /* 
+  * @brief : If "1" is pressed, draw with Bernstein; if "2" is pressed, draw with De-Casteljaus Algorithms
+  */
   void keyUp(int key, int mod) {
     if (key == GLFW_KEY_1) {
       mode = 0; //Draw Bernstein
@@ -96,12 +121,8 @@ class DrawCubic : public atkui::Framework
     }
   }
   private:
-  vec3 B0 = vec3(100,  50, 0);
-  vec3 B1 = vec3(150, 200, 0);
-  vec3 B2 = vec3(250, 100, 0);
-  vec3 B3 = vec3(300, 300, 0);
-  int mode = -1;
-
+  vector<vec3> controlPoints;
+  int mode = -1; //mode changes based on key pressed
 };
 
 int main(int argc, char **argv) {
