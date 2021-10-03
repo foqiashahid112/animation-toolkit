@@ -81,6 +81,8 @@ class Spline
     // Returns the number of control points (See interpolator.h)
     void editControlPoint(int id, const glm::vec3& v);
 
+    //Added function to apply natural endpoint conditions
+    // void naturalHermite();
   protected:
     mutable bool mDirty;
 

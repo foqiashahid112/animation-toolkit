@@ -7,7 +7,9 @@ int main()
 {
    std::vector<vec3> keys;
    keys.push_back(vec3(0,0,0));
+
    keys.push_back(vec3(1,1,0));
+
    keys.push_back(vec3(2,0,0));
 
    InterpolatorCatmullRom interp;

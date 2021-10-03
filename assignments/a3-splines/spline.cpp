@@ -49,7 +49,7 @@ void Spline::deleteKey(int keyID) {
 }
 
 glm::vec3 Spline::getKey(int keyID) const {
-  assert(keyID >= 0 && keyID < (int) mKeys.size());
+  //assert(keyID >= 0 && keyID < (int) mKeys.size());
   return mKeys[keyID];
 }
 
@@ -95,16 +95,41 @@ void Spline::editControlPoint(int id, const glm::vec3& v) {
   mInterpolator->editControlPoint(id, v);
 }
 
+// void Spline::naturalHermite() {
+//   if(getInterpolationType() == "Hermite")
+//     mInterpolator->setClamped(false);
+// }
+
 glm::vec3 Spline::getValue(float t) const {
   if (mDirty) 
   {
     mInterpolator->computeControlPoints(mKeys);
-    mDirty = false;
+    mDirty = false; //mDirty is like a switch, everytime we append it becomes true so we computeControl points again
   }
 
-  // todo: your code here
-  // compute the segment containing t
-  // compute the value [0, 1] along the segment for interpolation
-  return glm::vec3(0); 
+  if(getNumControlPoints() == 0){
+    return glm::vec3(0,0,0);
+  }
+  int segment = 0;
+  for (int i = 0; i < mTimes.size(); i++){
+    if(t <= getTime(0)){
+      segment = 0;
+      t = 0;
+      break;
+    } else if(t >= getDuration()){
+      segment = mKeys.size()-2;
+      t = getDuration();
+      break;
+    } else if(t > mTimes.at(i) && t <  mTimes.at(i+1)){
+      segment = mTimes.at(i);
+      break;
+    }
+  }
+
+  //segment is supposed to be keyID
+  float norm_t = (t - getTime(segment)) / (getTime(segment+1) - getTime(segment));
+  glm::vec3 ans = mInterpolator->interpolate(segment, norm_t);
+  
+  return ans;
 }
 

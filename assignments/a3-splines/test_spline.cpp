@@ -30,12 +30,11 @@ int main() {
    std::cout << "Duration: " << spline.getDuration() << std::endl;
    std::cout << "getValue(0): " << to_string(test) << std::endl;
 
-   // test with 2 values
+   //test with 2 values
    std::cout << "\n-------------------------------\n";
    std::cout << "Current interpolation type: " << spline.getInterpolationType() << std::endl;
    spline.appendKey(0, vec3(0.0, 0.0, 0.0));
    spline.appendKey(1, vec3(1.0, 1.0, 0.0));
-
    test = spline.getValue(-1); // test out of range
    std::cout << "Number of control points: " << spline.getNumControlPoints() << std::endl;
    std::cout << "Duration: " << spline.getDuration() << std::endl;
@@ -53,10 +52,12 @@ int main() {
    test = spline.getValue(1);
    std::cout << "getValue(1): " << to_string(test) << std::endl;
 
-   // test with 3 values (with different interpolators)
-   spline.appendKey(2, vec3(2,0,0));
+   //test with 3 values (with different interpolators)
+   spline.appendKey(2, vec3(2.0,0.0,0.0));
    std::cout << "\n-------------------------------\n";
+
    test = spline.getValue(1.5);
+
    std::cout << "Current interpolation type: " << spline.getInterpolationType() << std::endl;
    std::cout << "Number of control points: " << spline.getNumControlPoints() << std::endl;
    std::cout << "Duration: " << spline.getDuration() << std::endl;
@@ -83,7 +84,7 @@ int main() {
    test = spline.getValue(1.5);
    std::cout << "getValue(1.5): (natural) " << to_string(test) << std::endl;
 
-   // test other methods
+   //test other methods
    spline.editKey(2, vec3(3, 1, 0));
    test = spline.getValue(1.5);
    float duration = spline.getDuration();
