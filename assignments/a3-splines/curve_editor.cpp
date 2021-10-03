@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+using namespace glm;
 using glm::vec3;
 
 CurveEditor::CurveEditor() : 
@@ -31,6 +32,76 @@ void CurveEditor::setup() {
 void CurveEditor::scene() {
   drawState();
   // todo: your code here
+  //Draw Input KEYS in blue
+  setColor(vec3(0,0,1)); 
+  
+  //Draw Curve in blue
+  setColor(vec3(0,0,1));
+  float t = 0;
+  while(t < mSpline.getDuration()){
+    vec3 point = mSpline.getValue(t);
+    t += 0.01;
+    vec3 point2 = mSpline.getValue(t);
+    drawLine(point, point2);
+  }
+
+ if(mShowControlPoints == false){
+    for( int i = 0; i < mSpline.getNumKeys(); i++){
+      drawSphere(vec3(mSpline.getKey(i)), 10);
+    } 
+  } else if(mShowControlPoints == true){
+  //Draw control Points in yellow
+  if(mSpline.getInterpolationType() == "Linear"){
+    for( int i = 0; i < mSpline.getNumKeys(); i++){
+      drawSphere(vec3(mSpline.getKey(i)), 10);
+    }
+  }
+  else if(mSpline.getInterpolationType() == "Catmull-Rom"){
+    //mShowControlPoints = true;
+    int i = 0;
+    while(i < mSpline.getNumControlPoints()){
+    setColor(vec3(1,1,0));
+      if(i % 3 == 0){
+        setColor(vec3(0,0,1));
+      }
+      vec3 ctpt = vec3(mSpline.getControlPoint(i));
+      drawSphere(ctpt, 10);
+      i++;
+      vec3 ctpt2;
+      if(i == mSpline.getNumControlPoints() - 1){
+        ctpt2 = mSpline.getControlPoint(mSpline.getNumControlPoints()-1);
+        drawLine(ctpt, ctpt2);
+        setColor(vec3(0,0,1));
+        drawSphere(ctpt2, 10);
+        break;
+      } else{
+        ctpt2 = mSpline.getControlPoint(i);
+        drawLine(ctpt, ctpt2);
+      }
+    }
+  } else if(mSpline.getInterpolationType() == "Hermite"){
+    int i = 0;
+    while(i < mSpline.getNumControlPoints()){ 
+      setColor(vec3(1,1,0));
+      // set color to blue for keys
+      setColor(vec3(0,0,1));
+      vec3 control = mSpline.getControlPoint(i); //all of them are control points
+      vec3 der = mSpline.getControlPoint(i+1); //the derivative for an i
+      if(der == vec3(1,0,0)){
+        der = 100.0f * der;
+        mSpline.editControlPoint(i+1, der);
+      }
+      drawSphere(control, 10);
+      setColor(vec3(1,1,0));
+      drawSphere(control + der, 10);
+      drawLine(control, control + der);
+
+      i = i + 2;  
+    }
+
+  }
+  } //end of if ShowControlPoints == true
+
 }
 
 void CurveEditor::addPoint(const vec3& p) {
@@ -68,6 +139,12 @@ void CurveEditor::listControls() {
   std::cout << "SPACEBAR: clear" << std::endl;
 }
 
+/** Function is used to EDIT keys and control points
+ * @param pX int
+ * @param pY int
+ * @param dx int
+ * @param dy int
+ */
 void CurveEditor::mouseMotion(int pX, int pY, int dx, int dy) {
   if (mMode != EDIT) return;
   if (mSelected == -1) return;
@@ -85,6 +162,10 @@ void CurveEditor::mouseMotion(int pX, int pY, int dx, int dy) {
   }
 }
 
+/** Helper Function (used by mouseDown) picks ControlPoint based on x and y coordinates
+ * @param x int x-coordinate
+ * @param y int y-coordinate
+ */
 int CurveEditor::pickPoint(int x, int y) {
   vec3 tmp = vec3(x, y, 0);
 
@@ -113,12 +194,16 @@ int CurveEditor::pickPoint(int x, int y) {
   return -1;
 }
 
+
 void CurveEditor::mouseUp(int pButton, int state) {
   if (mButtonState == GLFW_MOUSE_BUTTON_LEFT) {
     mSelected = -1;
   }
 }
-
+/** Function stores mousePosition when mouseIsDown and adds/removes/edits point
+ * @param pButton int the state of button e.g GLFW_MOUSE_BUTTON_LEFT
+ * @param state int (??)
+ */
 void CurveEditor::mouseDown(int pButton, int state) {
   mButtonState = pButton;
   glm::vec2 p = mousePosition();
@@ -154,6 +239,7 @@ void CurveEditor::mouseDown(int pButton, int state) {
 
 }
 
+/** Function changes mMode based on key pressed */
 void CurveEditor::keyUp(int pKey, int mods) {
   if (pKey == 'p') {
     for (int i = 0; i < mSpline.getNumKeys(); i++) {
