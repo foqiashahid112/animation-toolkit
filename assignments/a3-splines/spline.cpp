@@ -42,7 +42,7 @@ int Spline::appendKey(float time, const glm::vec3& value) {
 }
 
 void Spline::deleteKey(int keyID) {
-  assert(keyID >= 0 && keyID < (int) mKeys.size());
+  //assert(keyID >= 0 && keyID < (int) mKeys.size());
   mKeys.erase(mKeys.begin() + keyID);
   mTimes.erase(mTimes.begin() + keyID);
   mDirty = true;

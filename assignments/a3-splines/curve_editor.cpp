@@ -31,10 +31,6 @@ void CurveEditor::setup() {
 
 void CurveEditor::scene() {
   drawState();
-  // todo: your code here
-  //Draw Input KEYS in blue
-  setColor(vec3(0,0,1)); 
-  
   //Draw Curve in blue
   setColor(vec3(0,0,1));
   float t = 0;
@@ -101,6 +97,7 @@ void CurveEditor::scene() {
 
   }
   } //end of if ShowControlPoints == true
+
 
 }
 
@@ -228,7 +225,8 @@ void CurveEditor::mouseDown(int pButton, int state) {
 
     } else if (mMode == REMOVE) {
       mSelected = pickPoint(pX, height() - pY);
-      deletePoint(mSelected);
+      //deletePoint(mSelected);
+      if (mSelected != -1 && !mShowControlPoints) deletePoint(mSelected);
 
     } else if (mMode == EDIT) {
       mSelected = pickPoint(pX, height() - pY);
