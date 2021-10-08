@@ -14,6 +14,6 @@ Derive the remaining formulas for extracting euler angles and implement them in 
 
 ## 3. Be Unique!
 
-<img src="https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a4-euler/throwingTeapots.gif" title 'Throwing teapots" width = '' alt = 'throwing teapots' />
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a4-euler/throwingTeapots.gif' title 'Throwing teapots" width = '' alt = 'throwing teapots' />
 
 An animation to show teapots being thrown around.  
