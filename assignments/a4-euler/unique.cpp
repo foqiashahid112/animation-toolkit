@@ -39,7 +39,7 @@ public:
       mYAngle = 0.0f;
       mZAngle = 0.0f;
       theta = 0; //initialization
-      thetaRate = 1.0;
+      thetaRate = 0.5;
       angle = 2*M_PI / 36; // 360 / 36 = 10
       radiuses = {50.0, 100.0, 150, 200, 250, 300, 350, 400}; //radius of circular motion
       dir = "c"; //clockwise
@@ -81,8 +81,12 @@ public:
             }
             //drawSphere(vec3(px, py,0), 20);
             push();
+            translate(vec3(px,py,0));
+            rotate(anglesRad[0], vec3(1, 0, 0));
+            rotate(anglesRad[1], vec3(0, 1, 0));
             rotate(anglesRad[2], vec3(0, 0, 1));
-            drawTeapot(vec3(px,py,0), 40);//rotate(anglesRad[0], vec3(1, 0, 0));
+            
+            drawTeapot(vec3(0,0,0), 40);//rotate(anglesRad[0], vec3(1, 0, 0));
             pop();
             theta = theta + angle;
             anglesRad[2] = anglesRad[2] + angle;
