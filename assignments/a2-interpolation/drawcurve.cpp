@@ -55,6 +55,7 @@ class DrawCubic : public atkui::Framework
       drawLine(p1,p2);
       }
   }
+  
   /* 
   * @brief : Helper Function calculates Bezier Basis
   * for cubic curve at time t for given control points

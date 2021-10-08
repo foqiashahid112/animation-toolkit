@@ -43,6 +43,10 @@ public:
     void fromEulerAnglesZXY(const Vector3& anglesRad);
     void fromEulerAnglesZYX(const Vector3& anglesRad);
 
+    Matrix3 Ry(double angleRad);
+    Matrix3 Rz(double angleRad);
+    Matrix3 Rx(double angleRad);
+
    void fromAxisAngle(const Vector3& axis, double rad);
    void toAxisAngle(Vector3& axis, double& rad) const;
 
