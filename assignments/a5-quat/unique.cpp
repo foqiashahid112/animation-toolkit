@@ -1,5 +1,6 @@
 #include "atkui/framework.h"
 #include "atkmath/quaternion.h"
+#include "atkmath/matrix3.h"
 
 using namespace glm;
 
@@ -20,11 +21,12 @@ public:
    }
 
    virtual void setup(){
-      v = atkmath::Vector3(0,0,1);
-      //v = vec3(0,0,1);
-      angle = M_PI / 4;
-      q.fromAxisAngle(v, angle);
-      q_inv = q.inverse();
+      //v = atkmath::Vector3(0,0,1);
+      v = vec3(0,1,0);
+      angle = 0.0f;
+      angleRate = (2.0f * M_PI) / 10.0f;
+      // q.fromAxisAngle(v, angle);
+      // q_inv = q.inverse();
 
       //Color Palette for circles:
       pallet = {
@@ -44,13 +46,13 @@ public:
       for(Circle& circle : myCircles){
          X = 0.5 * width();
          Y = 0.5 * height();
-         vec3 p_prev = vec3(X,Y,0);
-         vec3 p_new = q * p_prev * q_inv;
          push();
-         translate(p_new);
+         translate(vec3(X,Y,0));
+         rotate(angle,v);
          drawCircle(vec3(0,0,0), circle.col, circle.r);
          pop();
       }
+      angle = angle + angleRate;
    }
    void drawCircle(vec3 location, vec3 color, float radius){
       setColor(color);
@@ -74,11 +76,11 @@ public:
    float X, Y;
    std::vector<vec3> pallet;
    std::vector<Circle> myCircles;
-   atkmath::Quaternion q;
-   atkmath::Quaternion q_inv;
-   atkmath::Vector3 v;
-   // vec3 v;
-   double angle;
+   // atkmath::Quaternion q;
+   // atkmath::Quaternion q_inv;
+   // atkmath::Vector3 v;
+   vec3 v;
+   float angle; float angleRate;
 };
 
 int main(int argc, char** argv) {
