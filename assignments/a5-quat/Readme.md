@@ -1,7 +1,16 @@
 # Readme
 
-TODO: Replace this text with
+*Assignment 04*
 
-* images, gifs, videos
-* brief description of what each image/gif/video shows
+## 1. Quaternion
 
+Implement conversions between quaternions and the angle-axis representations for rotation.
+
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a5-quat/rotatingteapots.gif' title='throwingteapots' width='' alt='throwingteapots' />
+
+## 2. Be Unique!
+
+
+<img src='' title='unique' width='' alt='unique' />
+
+Colorful circles rotating
