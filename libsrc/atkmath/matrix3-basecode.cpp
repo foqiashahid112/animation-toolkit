@@ -1,5 +1,6 @@
 #include "atkmath/matrix3.h"
 #include "atkmath/quaternion.h"
+#include "atkmath/quaternion-basecode.cpp"
 
 namespace atkmath {
 
@@ -168,13 +169,35 @@ void Matrix3::fromEulerAnglesZYX(const Vector3& angleRad)
 
 void Matrix3::toAxisAngle(Vector3& axis, double& angleRad) const
 {
-   // TODO
+   Quaternion q;
+   q.fromMatrix(*this);
+   q.toAxisAngle(axis, angleRad);
 }
 
 void Matrix3::fromAxisAngle(const Vector3& axis, double angleRad)
 {
-   // TODO
-   *this = Identity;
+   Matrix3 m;
+   float x = axis[0];
+   float y = axis[1];
+   float z = axis[2];
+   float xx = x*x;
+   float yy = y*y;
+   float zz = z*z;
+   float xy = x*y;
+   float yz = y*z;
+   float xz = x*z;
+   float c_theta = cos(angleRad);
+   float s_theta = sin(angleRad);
+   m[0][0] = c_theta + (1-c_theta)*xx;
+   m[0][1]= -s_theta*x + (1 - c_theta)*xy;
+   m[0][2] = y*s_theta + x*y*(1-c_theta);
+   m[1][0] = -z*s_theta + (1-c_theta)*xy;
+   m[1][1]= c_theta + (1-c_theta)*yy;
+   m[1][2] = -x*s_theta + (1-c_theta)*yz;
+   m[2][0] = s_theta*y + (1-c_theta)*xy;
+   m[2][1]= -x*s_theta + (1-c_theta)*yz;
+   m[2][2] = c_theta + (1-c_theta)*zz;
+   *this = m;
 }
 
 Matrix3 Matrix3::Rz(double angleRad){
