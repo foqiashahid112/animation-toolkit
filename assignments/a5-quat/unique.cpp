@@ -21,9 +21,12 @@ public:
    }
 
    virtual void setup(){
+      X = 0.5 * width();
+      Y = 0.5 * height();
+      
       v = vec3(0,1,0);
       angle = 0.0f;
-      angleRate = (2.0f * M_PI) / 10.0f;
+      angleRate = M_PI / 2.0;
 
       //Color Palette for circles:
       pallet = {
@@ -40,14 +43,17 @@ public:
    }
 
    virtual void scene(){
+      // std::cout << "X" << X <<std::endl;
+      // std::cout << "Y" << Y <<std::endl;
+      float increment = 0;
       for(Circle& circle : myCircles){
-         X = 0.5 * width();
-         Y = 0.5 * height();
+         increment += 0.1f;
          push();
-         rotate(angle,v);
-         drawCircle(vec3(X,Y,0), circle.col, circle.r);
+         translate(vec3(X,Y,0));
+         rotate(angle, v);
+         drawCircle(vec3(0,0,0), circle.col,circle.r);
          pop();
-         angle = angle + angleRate; 
+         angle = angle + dt() * angleRate + increment; 
       }
 
    }

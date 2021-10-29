@@ -6,8 +6,10 @@ namespace atkmath {
 
 Quaternion Quaternion::Slerp(const Quaternion& q0, const Quaternion& q1, double t)
 {
-	// TODO
-	return Quaternion(1,0,0,0);
+	Quaternion q;
+	float angle = acos(Dot(q0, q1));
+	q = ((sin(angle*(1-t))/sin(angle))* q0 ) + ((sin(angle*t)/sin(angle))* q1) ;
+	return q;
 }
 
 void Quaternion::toAxisAngle (Vector3& axis, double& angleRad) const
