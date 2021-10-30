@@ -11,7 +11,7 @@ Implement Quaternion::Slerp()
 ## 2. Stacking Boxes
 
 
-<img src='' title='unique' width='' alt='unique' />
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a6-transform/boxes.png' title='unique' width='' alt='unique' />
 
 For this question, you will use the transform class to position several boxes.
 
