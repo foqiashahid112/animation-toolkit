@@ -11,6 +11,6 @@ Implement conversions between quaternions and the angle-axis representations for
 ## 2. Be Unique!
 
 
-<img src='' title='unique' width='' alt='unique' />
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a5-quat/rotating_discs.gif' title='unique' width='' alt='unique' />
 
 Colorful circles rotating
