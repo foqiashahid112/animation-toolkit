@@ -61,7 +61,8 @@ bool BVHReader::loadSkeleton(std::ifstream& inFile, Skeleton& skeleton) const
     return false;
   inFile.get(); //" "
   getline(inFile, jointname);// joint name
-  jointname = jointname.erase(jointname.find_last_not_of(" \n\r\t")+1);
+  jointname.erase(jointname.find_last_not_of(" \n\r\t")+1); // strip trailing whitespace
+
   Joint* joint = new Joint(jointname);
   skeleton.addJoint(joint);
   inFile >> readString; // "{"
@@ -100,8 +101,7 @@ bool BVHReader::loadJoint(std::ifstream &inFile,
   {
     inFile.get(); //" "
     getline(inFile, jointname);// joint name
-    jointname = jointname.erase(jointname.find_last_not_of(" \n\r\t")+1);
-    std::cout << jointname << std::endl;
+    jointname.erase(jointname.find_last_not_of(" \n\r\t")+1); // strip trailing whitespace
     Joint* joint = new Joint(jointname);
     skeleton.addJoint(joint, pParent);
     inFile >> readString; // "{"
