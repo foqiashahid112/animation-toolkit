@@ -29,6 +29,6 @@ In this demo, we will define a tentacle character and then draw it using the glo
 
 ## 5. Unique
 
-Still working on it :)
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a6-transform/moretentacles.gif' title = 'more tentacles' width= '' alt= 'more tentacles' />
 
 
