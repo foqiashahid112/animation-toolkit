@@ -20,7 +20,7 @@ public:
       BVHReader reader;
       reader.load("../motions/Beta/left_strafe_walking.bvh", _skeleton, _motion1);
       reader.load("../motions/Beta/walking.bvh", _skeleton, _motion2);
-
+      
       _blend = blend(_motion1, _motion2, _alpha);
    }
 
@@ -28,9 +28,20 @@ public:
    {
       Motion blend;
       blend.setFramerate(m1.getFramerate());
-
       // todo: replace the following line with your code
-      blend.appendKey(m1.getKey(0)); // placeholder
+      float duration_1 = m1.getDuration();
+      float duration_2 = m2.getDuration();
+      float duration = duration_1 * (1-alpha) + duration_2 * alpha;
+      float deltaT = 1/blend.getFramerate();
+      for(float t = 0; t < duration; t+=deltaT){
+         float t1 = (t / duration) * duration_1;
+         float t2 = (t / duration) * duration_2;
+         Pose pose1 = m1.getValue(t1);
+         Pose pose2 = m2.getValue(t2);
+         Pose newPose = Pose::Lerp(pose1, pose2, alpha);
+         blend.appendKey(newPose);
+      }
+      //blend.appendKey(m1.getKey(0)); // placeholder
       return blend;
    }
 

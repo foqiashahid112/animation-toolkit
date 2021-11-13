@@ -3,6 +3,7 @@
 #include "atkui/skeleton_drawer.h"
 #include <algorithm>
 #include <string>
+#include "atk/joint.h"
 
 using namespace atk;
 using namespace atkui;
@@ -27,10 +28,30 @@ public:
    Motion spliceUpperBody(const Motion& lower, const Motion& upper, float alpha)
    {
       Motion result;
-      result.setFramerate(lower.getFramerate());
-      // todo: your code here
-      result.appendKey(lower.getKey(0));
+      result.setFramerate(lower.getFramerate());//The motion returned by blend should have a framerate equal to orig
+      for(int i = 0; i < lower.getNumKeys(); i++){ //for each pose in lower
+         Pose pose_orig = lower.getKey(i); //original pose
+         Pose pose_upper = upper.getKey(i+120); //Motion for modifying the upper body
+         Pose new_pose = pose_orig;
+         for(int ii = 0; ii < _skeleton.getNumJoints(); ii++){ // for each joint
+            Joint* j = _skeleton.getByID(ii);
+            if(isUpperBody(j)){ //if joint is in upper body
+               quat q = glm::slerp(pose_upper.jointRots[ii], pose_orig.jointRots[ii], alpha);
+               new_pose.jointRots[ii] =  q; //pose_upper.jointRots[ii]; 
+               }
+         }
+         result.appendKey(new_pose);
+      }
       return result;
+   }
+
+   bool isUpperBody(Joint* j){
+      for(Joint* current = j; current != NULL; current = current->getParent()){
+         if(current->getName() == "Beta:Spine1"){
+            return true;
+         }
+      }
+      return false;
    }
 
    void scene()

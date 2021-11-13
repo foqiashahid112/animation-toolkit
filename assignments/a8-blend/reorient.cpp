@@ -34,9 +34,29 @@ public:
       result.setFramerate(motion.getFramerate());
 
       // todo: your code here
-      Pose pose = motion.getKey(0);
-      result.appendKey(pose);
+      vec3 displacement2 = pos;
+      quat rotation2 = glm::angleAxis(heading, vec3(0,1,0));
+      Transform Desired(rotation2, displacement2); // desired transformation
+
+      Pose rootPose = motion.getKey(0);
+      vec3 rootDisplacement = rootPose.rootPos;
+      quat rootRotation = rootPose.jointRots[0];
+      Transform T0(rootRotation, rootDisplacement);
+      Transform T_inverse = T0.inverse();
+      //Transform change = Desired*T_inverse;
       
+      for(int i = 0; i < motion.getNumKeys(); i++){
+         Pose currentPose = motion.getKey(i);
+         vec3 thisDisplacement = currentPose.rootPos;
+         quat thisRotation = currentPose.jointRots[0];
+         Transform currentPoseT(thisRotation, thisDisplacement);
+         Transform change = Desired*T_inverse*currentPoseT;
+         quat newRotation = change.r();
+         vec3 newDisplacement = change.t();
+         currentPose.rootPos = newDisplacement;
+         currentPose.jointRots[0] = newRotation;
+         result.appendKey(currentPose);
+      }
       return result;
    }
 

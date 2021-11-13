@@ -32,9 +32,27 @@ public:
       Joint* leftElbow = _skeleton.getByName("Beta:LeftForeArm");
       Joint* rightElbow = _skeleton.getByName("Beta:RightForeArm");
 
+
+
       Motion result;
       result.setFramerate(motion.getFramerate());
       // todo: your code here
+      for(int i = 0; i < motion.getNumKeys(); i++){ //for each pose
+         Pose currentPose = motion.getKey(i);
+         for(int ii = 0; ii < _skeleton.getNumJoints(); ii++){ // for each joint
+            Joint* currentJoint = _skeleton.getByID(ii);
+            if(currentJoint->getName() == "Beta:LeftArm"){
+               currentPose.jointRots[ii] = currentPose.jointRots[ii] * leftLocalRot;
+            }
+            if(currentJoint->getName() == "Beta:RightArm"){
+               currentPose.jointRots[ii] = currentPose.jointRots[ii] * rightLocalRot;
+            }
+            if(currentJoint->getName() == "Beta:LeftForeArm" ||currentJoint->getName() == "Beta:RightForeArm"){
+               currentPose.jointRots[ii] = elbowLocalRot;
+            }
+         }
+         result.appendKey(currentPose); 
+      }
       result.appendKey(motion.getKey(0));
 
       return result;
@@ -45,17 +63,31 @@ public:
       quat rightRot = eulerAngleRO(XYZ, radians(vec3(14, 88, -33)));
       quat elbowRot = eulerAngleRO(XYZ, radians(vec3(0, 23, 0)));
 
-      Joint* leftArm = _skeleton.getByName("Beta:LeftArm");
-      Joint* rightArm = _skeleton.getByName("Beta:RightArm");
+      // Joint* leftArm = _skeleton.getByName("Beta:LeftArm");
+      // Joint* rightArm = _skeleton.getByName("Beta:RightArm");
 
-      Joint* leftElbow = _skeleton.getByName("Beta:LeftForeArm");
-      Joint* rightElbow = _skeleton.getByName("Beta:RightForeArm");
+      // Joint* leftElbow = _skeleton.getByName("Beta:LeftForeArm");
+      // Joint* rightElbow = _skeleton.getByName("Beta:RightForeArm");
 
       Motion result;
       result.setFramerate(motion.getFramerate());
-      // todo: your code here
-      result.appendKey(motion.getKey(0));
-
+      for(int i = 0; i < motion.getNumKeys(); i++){ //for each pose
+         Pose currentPose = motion.getKey(i);
+         for(int ii = 0; ii < _skeleton.getNumJoints(); ii++){ // for each joint
+            Joint* currentJoint = _skeleton.getByID(ii);
+            if(currentJoint->getName() == "Beta:LeftArm"){
+               currentPose.jointRots[ii] = leftRot;
+            }
+            if(currentJoint->getName() == "Beta:RightArm"){
+               currentPose.jointRots[ii] = rightRot;
+            }
+            if(currentJoint->getName() == "Beta:LeftForeArm" ||currentJoint->getName() == "Beta:RightForeArm"){
+               currentPose.jointRots[ii] = elbowRot;
+            }
+         }
+         result.appendKey(currentPose); 
+      }
+      //result.appendKey(motion.getKey(0));
       return result;
    }
 
