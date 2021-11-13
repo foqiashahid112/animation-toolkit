@@ -23,7 +23,7 @@
 
 ## 5. Unique
 
-<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a7-motion/squirrel.gif' title='unique' width='' alt='unique' />
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a8-blend/unique.gif' title='unique' width='' alt='unique' />
 
 
 
