@@ -127,6 +127,34 @@ class AIKSimple : public atkui::Framework
   void solveIKTwoLink(Skeleton &skeleton, const vec3 &goalPosition)
   {
     // todo: implement two link IK algorithm
+    Joint* root = skeleton.getByID(0);
+    Joint* middle = skeleton.getByID(1);
+    Joint* end = skeleton.getByID(2);
+    vec3 rootLocation = root->getGlobalTranslation();
+    vec3 middleLocation = middle->getGlobalTranslation();
+    vec3 endLocation = end->getGlobalTranslation();
+    float r = length(goalPosition - rootLocation);
+    // float l1 = middleLocation[0] - rootLocation[0];
+    // float l2 = endLocation[0] - middleLocation[0];
+    float l1 = length(middleLocation - rootLocation);
+    float l2 = length(endLocation - middleLocation);
+
+    float rr = (r*r - l1*l1 - l2*l2)/ (-2.0f * l1 * l2);
+    if(rr < -1){
+      rr = -1;
+    }
+    if(rr > 1){
+      rr = 1;
+    }
+    float phi = acos(rr);
+    float theta2Z = phi - M_PI;
+    float ll = (-l2 * sin(theta2Z)) / r;
+    float theta1Z = asin(ll);
+    float gamma = asin(goalPosition[1]/r);
+    float beta = atan2(-1.0f * goalPosition[2], goalPosition[0]);
+    root->setLocalRotation(glm::angleAxis(beta, vec3(0,1,0))*glm::angleAxis(gamma, vec3(0,0,1))*glm::angleAxis(theta1Z, vec3(0,0,1)));
+    middle->setLocalRotation(glm::angleAxis(theta2Z, vec3(0,0,1)));
+    skeleton.fk();
   }
 
  private:
