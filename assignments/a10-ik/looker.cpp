@@ -30,6 +30,24 @@ public:
 
    void lookAtTarget(Joint* head, const vec3& target) {
       // TODO: Your code here
+      vec3 globalPos = head->getGlobalTranslation();
+      vec3 targetDirection = target - globalPos;
+      vec3 targetDirectionN = normalize(targetDirection);
+
+      vec3 z = targetDirectionN;
+      //Assume y is up
+      vec3 x = cross(vec3(0,1,0), z);
+      vec3 x_N = normalize(x);
+      vec3 y = cross(z, x);
+      vec3 y_N = normalize(y);
+      quat rotation = quat(mat3(x_N,y_N, z));
+
+
+      Joint* parent = head->getParent();
+      quat rparentToGlobal = parent->getGlobalRotation();
+      quat localToParent = glm::inverse(rparentToGlobal) * rotation;
+      Transform T = Transform::Rot(localToParent);
+      head->setLocalRotation(localToParent);
       head->fk();
    }
 
