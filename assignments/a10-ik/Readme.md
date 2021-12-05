@@ -1,7 +1,20 @@
 # Readme
 
-TODO: Replace this text with
+*Assignment 010*
 
-* images, gifs, videos
-* brief description of what each image/gif/video shows
+*Reach for your goals*
+
+## 1 Looker
+
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a10-ik/looker.gif' title='blend' width='' alt='blend' />
+
+## 1.2 CrossFade
+
+<img src='https://github.com/foqiashahid112/animation-toolkit/blob/main/assignments/a9-fade/crossfade.gif' title='splice' width='' alt='splice' />
+
+
+
+
+
+
 
