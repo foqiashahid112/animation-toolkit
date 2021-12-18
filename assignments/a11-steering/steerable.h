@@ -56,7 +56,7 @@ protected:
 
 public:
    // translation control: f = m * Kv0 * (vd - v)
-   static float kVelKv;  
+   static float kVelKv;
 
    // rotation control: tau = I * (-Kv1 * thetaDot + Kp1 * (thetaD - theta))
    static float kOriKv;  

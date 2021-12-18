@@ -4,9 +4,11 @@
 using namespace glm;
 using namespace atk;
 
-float ASteerable::kVelKv = 150.0; 
-float ASteerable::kOriKv = 150.0;  
-float ASteerable::kOriKp = 150.0;
+float naturalFreq = 8;
+float stem = 1;
+float ASteerable::kVelKv = 1.0f; 
+float ASteerable::kOriKv = 2.0f * stem * naturalFreq;  
+float ASteerable::kOriKp = naturalFreq * naturalFreq;
 
 // Given a desired velocity, veld, and dt, compute a transform holding 
 // the new orientation and change in position
@@ -16,19 +18,30 @@ float ASteerable::kOriKp = 150.0;
 void ASteerable::senseControlAct(const vec3& veld, float dt)
 {
    // Compute _vd and _thetad
-
+   float _vd = length(veld);
+   _thetad = atan2(veld.x, veld.z); // Z is forward and we rotate around Y
    // compute _force and _torque
-
+   _force = _mass *  kVelKv * (_vd - _state[VEL]);
+   float angle = _thetad - _state[ORI];
+   float change = fmod(angle+ M_PI, 2*M_PI)- M_PI;
+   _torque = _inertia * (-kOriKv * _state[AVEL] + kOriKp * (change));
    // find derivative
-
+   _derivative[POS] = _state[VEL];
+   _derivative[ORI] = _state[AVEL];
+   _derivative[VEL] = _force / _mass;
+   _derivative[AVEL] = _torque / _inertia;
    // update state
-
+   for(int i = 0; i < 4; i++){
+      _state[i] = _state[i] + dt * _derivative[i];
+   }
    // compute global position and orientation and update _characterRoot
    quat rot = glm::angleAxis(_state[ORI], vec3(0,1,0));
    vec3 localPos(0,0,_state[POS]);
 
    _characterRoot.setT(rot * localPos + _characterRoot.t());
    _characterRoot.setR(rot); 
+
+
 }
 
 // randomize the colors, characters, and animation times here

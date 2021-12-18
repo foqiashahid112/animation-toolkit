@@ -10,8 +10,8 @@ using namespace atk;
 ABehavior::ABehavior(const char* name) : _name(name)
 {
    // TODO: set good values
-   setParam("MaxSpeed", 1);
-   setParam("AgentRadius", 1);
+   setParam("MaxSpeed", 100);
+   setParam("AgentRadius", 100);
 }
 
 //--------------------------------------------------------------
@@ -32,7 +32,13 @@ ASeek::ASeek() : ABehavior("Seek")
 vec3 ASeek::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& target)
 {
-   return vec3(0,0,0);
+   vec3 position = actor.getPosition();
+   vec3 direction = target - position;
+   vec3 velocity = direction;
+   if(length(velocity) > getParam("MaxSpeed")){
+      velocity = normalize(direction) * getParam("MaxSpeed"); 
+   }
+   return velocity;
 }
 
 //--------------------------------------------------------------
@@ -53,7 +59,13 @@ AFlee::AFlee() : ABehavior("Flee")
 vec3 AFlee::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& targetPos)
 {
-    return vec3(0,0,0);
+   vec3 position = actor.getPosition();
+   vec3 direction = targetPos - position;
+   vec3 velocity = direction;
+   if(length(velocity) > getParam("MaxSpeed")){
+      velocity = -1.0f * normalize(direction) * getParam("MaxSpeed"); 
+   }
+   return velocity;
 }
 
 //--------------------------------------------------------------
@@ -62,8 +74,8 @@ vec3 AFlee::calculateDesiredVelocity(const ASteerable& actor,
 AArrival::AArrival() : ABehavior("Arrival") 
 {
    // TODO: Set good parameters
-   setParam("kArrival", 1);
-   setParam("TargetRadius", 1);
+   setParam("kArrival", 10);
+   setParam("TargetRadius", 20);
 }
 
 //
@@ -75,7 +87,18 @@ AArrival::AArrival() : ABehavior("Arrival")
 vec3 AArrival::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& targetPos)
 {
-    return vec3(0,0,0);
+   vec3 position = actor.getPosition();
+   float r = getParam("TargetRadius");
+   vec3 targetOffset = targetPos - position;
+   float distance = length(targetOffset);
+   float speed;
+   if(distance <= r){
+      speed = (distance / r) * getParam("MaxSpeed");
+   } else{
+      speed = getParam("MaxSpeed");
+   }
+   vec3 velocity = speed * normalize(targetOffset);
+   return velocity;
 }
 
 //--------------------------------------------------------------
@@ -84,7 +107,7 @@ vec3 AArrival::calculateDesiredVelocity(const ASteerable& actor,
 ADeparture::ADeparture() : ABehavior("Departure") 
 {
    setParam("InnerRadius", 1);
-   setParam("OuterRadius", 1);
+   setParam("OuterRadius", 100);
    setParam("kDeparture", 1);
 }
 
@@ -94,7 +117,18 @@ ADeparture::ADeparture() : ABehavior("Departure")
 vec3 ADeparture::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& targetPos)
 {
-   return vec3(0,0,0);
+   vec3 position = actor.getPosition();
+   float r = getParam("OuterRadius");
+   vec3 targetOffset = position - targetPos;
+   float distance = length(targetOffset);
+   float speed;
+   if(distance <= r){
+      speed = (distance/ r) * getParam("MaxSpeed");
+   } else{
+      speed = getParam("MaxSpeed");
+   }
+   vec3 velocity = speed * normalize(targetOffset);
+   return velocity;
 }
 
 //--------------------------------------------------------------
@@ -111,6 +145,7 @@ AAvoid::AAvoid() : ABehavior("Avoid")
 vec3 AAvoid::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& targetPos)
 {
+   
     return vec3(0,0,0);
 }
 //--------------------------------------------------------------
@@ -125,6 +160,7 @@ AWander::AWander() : ABehavior("Wander")
 vec3 AWander::calculateDesiredVelocity(const ASteerable& actor,
    const AWorld& world, const vec3& target)
 {
+   vec3 center = vec3(0,0,0); //local coordinates
    return vec3(0,0,0);
 }
 
